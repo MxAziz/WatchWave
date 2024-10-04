@@ -1,4 +1,11 @@
 
+function getTimeString(time) {
+    const hour = parseInt(time / 3600);
+    let remainingSecond = time % 3600;
+    const minute = parseInt(remainingSecond / 60);
+    return `${hour} hour ${minute}minute ago`
+}
+
 // fetch, load show categories on html
 
 // create loadCategories
@@ -29,8 +36,9 @@ const displayVideos = (videos) =>{
             <img
             src=${video.thumbnail}
             class="h-full w-full object-cover"
-            alt="Shoes" />
-            <span class="absolute right-2 bottom-2 bg-black text-white rounded p-1">${video.others.posted_date}</span>
+            />
+            ${video.others.posted_date?.length === 0 ? "" : `<span class="absolute right-2 bottom-2 bg-black text-white rounded p-1">${getTimeString(video.others.posted_date)}</span>`}
+
         </figure>
 
         <div class="px-0 py-2 flex gap-2">
@@ -49,9 +57,7 @@ const displayVideos = (videos) =>{
         </,div>
         `
         videosContainer.append(card);
-
     });
-
 }
 
 // create displayCategories
@@ -68,8 +74,6 @@ const displayCategories = (categories) =>{
         categoryContainer.append(button);
 
     });
-
-
 }
 
 
