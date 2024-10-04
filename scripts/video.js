@@ -3,6 +3,7 @@ function getTimeString(time) {
     const hour = parseInt(time / 3600);
     let remainingSecond = time % 3600;
     const minute = parseInt(remainingSecond / 60);
+    // remainingSecond = remainingSecond / 60;
     return `${hour} hour ${minute}minute ago`
 }
 
@@ -24,9 +25,19 @@ const loadVideos = () => {
         .then(data => displayVideos(data.videos))
         .catch(error =>console.error(error))
 }
+
+// load videos by specific btn
+const loadCategoryVideos = (id) => {
+    // alert(id)
+    fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
+        .then(res => res.json())
+        .then(data => displayVideos(data.category))
+        .catch(error =>console.error(error))
+}
 // display videos
 const displayVideos = (videos) =>{
     const videosContainer = document.getElementById('videos');
+    videosContainer.innerHTML = "";
     videos.forEach(video  => {
         console.log(video);
         const card = document.createElement('div');
@@ -37,7 +48,7 @@ const displayVideos = (videos) =>{
             src=${video.thumbnail}
             class="h-full w-full object-cover"
             />
-            ${video.others.posted_date?.length === 0 ? "" : `<span class="absolute right-2 bottom-2 bg-black text-white rounded p-1">${getTimeString(video.others.posted_date)}</span>`}
+            ${video.others.posted_date?.length === 0 ? "" : `<span class="absolute right-2 bottom-2 bg-black text-white text-xs rounded p-1">${getTimeString(video.others.posted_date)}</span>`}
 
         </figure>
 
@@ -67,12 +78,14 @@ const displayCategories = (categories) =>{
     categories.forEach(item => {
         console.log(item);
         // create a btn
-        const button = document.createElement('button')
-        button.classList = 'btn';
-        button.innerText = item.category;
+        const buttonContainer = document.createElement('div')
+        buttonContainer.innerHTML = `
+        <button onclick="loadCategoryVideos(${item.category_id})" class="btn">
+          ${item.category}
+        </button>
+        `
         // add btn to category container
-        categoryContainer.append(button);
-
+        categoryContainer.append(buttonContainer);
     });
 }
 
