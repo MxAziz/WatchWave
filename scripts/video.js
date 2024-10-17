@@ -28,10 +28,15 @@ const loadVideos = () => {
 
 // load videos by specific btn
 const loadCategoryVideos = (id) => {
-    // alert(id)
     fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
         .then(res => res.json())
-        .then(data => displayVideos(data.category))
+        .then(data => {
+            const activeBtn = document.getElementById(`btn-${id}`)
+            console.log(activeBtn);
+
+            activeBtn.classList.add("active");
+            displayVideos(data.category)
+        })
         .catch(error =>console.error(error))
 }
 // display videos
@@ -42,7 +47,7 @@ const displayVideos = (videos) =>{
     if (videos.length === 0) {
         videosContainer.classList.remove('grid')
         videosContainer.innerHTML = `
-        <div class=" flex flex-col gap-5 justify-center items-center ">
+        <div class=" flex flex-col gap-5 justify-center items-center mt-8">
             <img src="./assets/Icon.png">
             <h2 class="text-center text-2xl font-bold">No Content Here in this Category</h2>
         </div>
@@ -90,11 +95,10 @@ const displayCategories = (categories) =>{
     const categoryContainer = document.getElementById('categories');
 
     categories.forEach(item => {
-        console.log(item);
         // create a btn
         const buttonContainer = document.createElement('div')
         buttonContainer.innerHTML = `
-        <button onclick="loadCategoryVideos(${item.category_id})" class="btn">
+        <button id="btn-${item.category_id}" onclick="loadCategoryVideos(${item.category_id})" class="btn category-btn">
           ${item.category}
         </button>
         `
@@ -106,24 +110,3 @@ const displayCategories = (categories) =>{
 
 loadCategories();
 loadVideos();
-
-// ------------>
-// const demo= {
-//     "category_id": "1001",
-//     "video_id": "aaag",
-//     "thumbnail": "https://i.ibb.co/DRxB1Wm/sunris.jpg",
-//     "title": "Sunrise Reverie",
-//     "authors": [
-//         {
-//             "profile_picture": "https://i.ibb.co/yQFJ42h/ava.jpg",
-//             "profile_name": "Ava Johnson",
-//             "verified": false
-//         }
-//     ],
-//     "others": {
-//         "views": "1.1K",
-//         "posted_date": "16950"
-//     },
-//     "description": "'Sunrise Reverie' by Ava Johnson takes listeners on a serene journey through tranquil melodies and soft harmonies. With 1.1K views, this track is perfect for morning relaxation or an evening wind-down. Ava's heartfelt lyrics and soothing voice create a sense of peace, making it a go-to for fans seeking calm and inspiration in their musical choices."
-// }
-// ------------>
